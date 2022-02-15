@@ -65,7 +65,7 @@ function CheckoutProduct({
        {/* Right add/Remove button */}
        <div className="flex flex-col space-y-2 my-auto justify-self-end">
        <button className="button" onClick={addItemToBasket}>
-                    Remove from Basket
+                   Add to basket
                 </button>
                 <button className="button" onClick={removeitemFromBasket}>
                     Remove from Basket
