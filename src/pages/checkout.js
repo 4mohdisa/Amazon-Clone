@@ -20,23 +20,24 @@ function checkout() {
 
 
     const createCheckoutSession = async () => {
-      const stripe= await stripePromise;
+      const stripe = await stripePromise;
+      
  
       //call backend to create a checkout session...
       const checkoutSession = await axios.post('/api/create-checkout-session',
       {
-        items:items,
+        items: items,
         email: session.user.email
       })
  
       //redirect user/customer to stripe checkout
       const result = await stripe.redirectToCheckout({
           sessionId: checkoutSession.data.id,
-      })
+      }),
  
       if (result.error) alert(result.error.message);
       
-  }
+  };
   
   return (
     <div className="bg-gray-100">
@@ -86,9 +87,18 @@ function checkout() {
                  </span>
                  
                  </h2>
-                 <button role="link"  onClick={createCheckoutSession} disabled={!session} className={`button mt-2 ${!session && `cursor-not-allowed from-gray-300 to-gray-500 text-gray-300`}`}>
+                 <button 
+                 role="link"
+                 onClick={createCheckoutSession}
+                className="button mt-2">
                  {!session ? 'Sign in to checkout': 'Proceed to checkout'}
                 </button>
+                 {/* <button 
+                 role="link"
+                 onClick={createCheckoutSession}
+                 disabled={!session} className={`button mt-2 ${!session && `cursor-not-allowed from-gray-300 to-gray-500 text-gray-300`}`}>
+                 {!session ? 'Sign in to checkout': 'Proceed to checkout'}
+                </button> */}
 
              </>
          )}

@@ -11,7 +11,7 @@
     "@heroicons/react": "^1.0.5",
     "@reduxjs/toolkit": "1.5.0",
     "@stripe/react-stripe-js": "^1.7.0",
-    "@stripe/stripe-js": "^1.22.0",
+    "@stripe/stripe-js": "^1.23.0",
     "@tailwindcss/line-clamp": "^0.2.0",
     "axios": "^0.26.0",
     "firebase": "^9.6.6",
@@ -24,7 +24,7 @@
     "react-redux": "latest",
     "react-responsive-carousel": "^3.2.22",
     "react-reveal": "^1.2.2",
-    "stripe": "^8.202.0"
+    "stripe": "^8.203.0"
   },
   "license": "MIT",
   "devDependencies": {

@@ -1025,10 +1025,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stripe/stripe-js@npm:^1.22.0":
-  version: 1.22.0
-  resolution: "@stripe/stripe-js@npm:1.22.0"
-  checksum: 29a294ac85681e2d3f64fc2a04d12e001931526cd60debb6075d3ccf133331599d8f8f155423223b410f03019120ba0e2769fe81111c84245e572b2ec86db4c2
+"@stripe/stripe-js@npm:^1.23.0":
+  version: 1.23.0
+  resolution: "@stripe/stripe-js@npm:1.23.0"
+  checksum: bda2def5490298bab73e4488a4a2612a42b89965744beffa4aa07180665edadea5261903c00a02cb318de664ec73c957e7addf70c9fc022367b4d2658b6ff1ac
   languageName: node
   linkType: hard
 
@@ -5566,13 +5566,13 @@ next@latest:
   languageName: node
   linkType: hard
 
-"stripe@npm:^8.202.0":
-  version: 8.202.0
-  resolution: "stripe@npm:8.202.0"
+"stripe@npm:^8.203.0":
+  version: 8.203.0
+  resolution: "stripe@npm:8.203.0"
   dependencies:
     "@types/node": ">=8.1.0"
     qs: ^6.6.0
-  checksum: f313f7d9f9154440dc1bd712a6a567e55346711d6075c66a926f58a3432b0ca46509a7b315ae0275dff272b0325b0dba3823e8664f1e55783e4bc8247078b2e0
+  checksum: 98d921d0c4e779dc9bbd52bc645c0b17bf7770e14013757fdfadb448766285d921e94ce8e1e132dff8f3e06b084de873c43c52203f947089b18260a928e836a1
   languageName: node
   linkType: hard
 
@@ -6077,7 +6077,7 @@ next@latest:
     "@heroicons/react": ^1.0.5
     "@reduxjs/toolkit": 1.5.0
     "@stripe/react-stripe-js": ^1.7.0
-    "@stripe/stripe-js": ^1.22.0
+    "@stripe/stripe-js": ^1.23.0
     "@tailwindcss/line-clamp": ^0.2.0
     autoprefixer: ^10.2.5
     axios: ^0.26.0
@@ -6092,7 +6092,7 @@ next@latest:
     react-redux: latest
     react-responsive-carousel: ^3.2.22
     react-reveal: ^1.2.2
-    stripe: ^8.202.0
+    stripe: ^8.203.0
     tailwindcss: ^2.1.2
   languageName: unknown
   linkType: soft
