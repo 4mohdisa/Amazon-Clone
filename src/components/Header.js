@@ -44,7 +44,7 @@ onClick={() => router.push('/')}
         <p>
         {session ? `Hello, ${session.user.name}` : 'Sign In'}
         </p>
-        <p className="font-extrabold md:text-sm">Account & Lists</p>
+        <p className="font-extrabold md:text-sm">Account & Lists {session ? `Account & Lists` : 'Logout'}</p>
 
         </div>
 
