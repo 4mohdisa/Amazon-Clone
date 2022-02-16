@@ -1012,6 +1012,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@stripe/react-stripe-js@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "@stripe/react-stripe-js@npm:1.7.0"
+  dependencies:
+    prop-types: ^15.7.2
+  peerDependencies:
+    "@stripe/stripe-js": ^1.20.3
+    react: ^16.8.0 || ^17.0.0
+    react-dom: ^16.8.0 || ^17.0.0
+  checksum: 4084b2725d436fad2e6d8173883cb5082837f2bc7a0c4d758e8ba022b164339a31165c6043fc954d9cd083d206189121208e2f672af9357ea87a5714c5b8f20d
+  languageName: node
+  linkType: hard
+
+"@stripe/stripe-js@npm:^1.22.0":
+  version: 1.22.0
+  resolution: "@stripe/stripe-js@npm:1.22.0"
+  checksum: 29a294ac85681e2d3f64fc2a04d12e001931526cd60debb6075d3ccf133331599d8f8f155423223b410f03019120ba0e2769fe81111c84245e572b2ec86db4c2
+  languageName: node
+  linkType: hard
+
 "@tailwindcss/line-clamp@npm:^0.2.0":
   version: 0.2.0
   resolution: "@tailwindcss/line-clamp@npm:0.2.0"
@@ -1115,6 +1135,13 @@ __metadata:
   version: 15.3.0
   resolution: "@types/node@npm:15.3.0"
   checksum: fb9d6c4e9be5cc7b972b97bbbe4e111f48be284ae173d6946bc336ffec8dd3bf024a3c2fb0f065e07ae499127b8ff2aa5ab098a37ca03be1b5856ba499d6f2a4
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:>=8.1.0":
+  version: 17.0.18
+  resolution: "@types/node@npm:17.0.18"
+  checksum: 6c4edfc2b3ba2342a9c3d56e934c5245948ab752f4dc04bd6790b9603e6ebc53bc4f5befc3662e207f7dba2ddd17ccf657f915e319ea7cdd4f77b851079d1611
   languageName: node
   linkType: hard
 
@@ -1413,6 +1440,15 @@ __metadata:
   dependencies:
     array-filter: ^1.0.0
   checksum: 915a89f31bb9ba51f7396d5ae7d8eff99bc6d6ba9f337068a6916e9ba56fa47bfea7ea69f6f6ad131eac57f76582c721e5f0594e8fea7156894313fc41203fbd
+  languageName: node
+  linkType: hard
+
+"axios@npm:^0.26.0":
+  version: 0.26.0
+  resolution: "axios@npm:0.26.0"
+  dependencies:
+    follow-redirects: ^1.14.8
+  checksum: d7a8b898f4157bedeb2e06c03b16133b91b354c041205bea732ce58b7a21f373d22057b0eea0d482838145ce6ff482b359750d9bcb8dd19d45e3928e3c65c280
   languageName: node
   linkType: hard
 
@@ -2570,6 +2606,16 @@ __metadata:
     "@firebase/storage-compat": 0.1.10
     "@firebase/util": 1.4.3
   checksum: 49be0a83a5984147fb9a5c4de74d677babbd02d1fbec7ce1a431a64aa54cad99c88a68a670f7304c6249c15b174f6df1806de5786487e833cba1ebefb6c567a0
+  languageName: node
+  linkType: hard
+
+"follow-redirects@npm:^1.14.8":
+  version: 1.14.8
+  resolution: "follow-redirects@npm:1.14.8"
+  peerDependenciesMeta:
+    debug:
+      optional: true
+  checksum: 40c67899c2e3149a27e8b6498a338ff27f39fe138fde8d7f0756cb44b073ba0bfec3d52af28f20c5bdd67263d564d0d8d7b5efefd431de95c18c42f7b4aef457
   languageName: node
   linkType: hard
 
@@ -4774,6 +4820,15 @@ next@latest:
   languageName: node
   linkType: hard
 
+"qs@npm:^6.6.0":
+  version: 6.10.3
+  resolution: "qs@npm:6.10.3"
+  dependencies:
+    side-channel: ^1.0.4
+  checksum: 0fac5e6c7191d0295a96d0e83c851aeb015df7e990e4d3b093897d3ac6c94e555dbd0a599739c84d7fa46d7fee282d94ba76943983935cf33bba6769539b8019
+  languageName: node
+  linkType: hard
+
 "querystring-es3@npm:0.2.1, querystring-es3@npm:^0.2.0":
   version: 0.2.1
   resolution: "querystring-es3@npm:0.2.1"
@@ -5232,6 +5287,17 @@ next@latest:
   languageName: node
   linkType: hard
 
+"side-channel@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "side-channel@npm:1.0.4"
+  dependencies:
+    call-bind: ^1.0.0
+    get-intrinsic: ^1.0.2
+    object-inspect: ^1.9.0
+  checksum: 351e41b947079c10bd0858364f32bb3a7379514c399edb64ab3dce683933483fc63fb5e4efe0a15a2e8a7e3c436b6a91736ddb8d8c6591b0460a24bb4a1ee245
+  languageName: node
+  linkType: hard
+
 "signal-exit@npm:^3.0.0":
   version: 3.0.7
   resolution: "signal-exit@npm:3.0.7"
@@ -5497,6 +5563,16 @@ next@latest:
   dependencies:
     ansi-regex: ^5.0.1
   checksum: f3cd25890aef3ba6e1a74e20896c21a46f482e93df4a06567cebf2b57edabb15133f1f94e57434e0a958d61186087b1008e89c94875d019910a213181a14fc8c
+  languageName: node
+  linkType: hard
+
+"stripe@npm:^8.202.0":
+  version: 8.202.0
+  resolution: "stripe@npm:8.202.0"
+  dependencies:
+    "@types/node": ">=8.1.0"
+    qs: ^6.6.0
+  checksum: f313f7d9f9154440dc1bd712a6a567e55346711d6075c66a926f58a3432b0ca46509a7b315ae0275dff272b0325b0dba3823e8664f1e55783e4bc8247078b2e0
   languageName: node
   linkType: hard
 
@@ -6000,8 +6076,11 @@ next@latest:
   dependencies:
     "@heroicons/react": ^1.0.5
     "@reduxjs/toolkit": 1.5.0
+    "@stripe/react-stripe-js": ^1.7.0
+    "@stripe/stripe-js": ^1.22.0
     "@tailwindcss/line-clamp": ^0.2.0
     autoprefixer: ^10.2.5
+    axios: ^0.26.0
     firebase: ^9.6.6
     firebase-admin: ^9.8.0
     next: latest
@@ -6013,6 +6092,7 @@ next@latest:
     react-redux: latest
     react-responsive-carousel: ^3.2.22
     react-reveal: ^1.2.2
+    stripe: ^8.202.0
     tailwindcss: ^2.1.2
   languageName: unknown
   linkType: soft
