@@ -29,7 +29,7 @@ function checkout() {
       {
         items: items,
         email: session.user.email,
-      })
+      });
  
       //redirect user/customer to stripe checkout
       const result = await stripe.redirectToCheckout({

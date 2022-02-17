@@ -42,7 +42,7 @@ onClick={() => router.push('/')}
 <div  className="text-white flex items-center text-xs space-x-6 mx-6 whitespace-nowrap" >
     <div onClick={!session ? signIn : signOut} className="link ">
         <p>
-        {session ? `Hello, ${session.user.email}` : 'Sign In'}
+        {session ? `Hello, ${session.user.name}` : 'Sign In'}
         </p>
         <p className="font-extrabold md:text-sm">{session ? `Logout ` : 'Account & Lists'}</p>
 
