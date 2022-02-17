@@ -91,15 +91,9 @@ function checkout() {
                  <button 
                  role="link"
                  onClick={createCheckoutSession}
-                className="button mt-2">
-                 {!session ? 'Sign in to checkout': 'Proceed to checkout'}
-                </button>
-                 {/* <button 
-                 role="link"
-                 onClick={createCheckoutSession}
                  disabled={!session} className={`button mt-2 ${!session && `cursor-not-allowed from-gray-300 to-gray-500 text-gray-300`}`}>
                  {!session ? 'Sign in to checkout': 'Proceed to checkout'}
-                </button> */}
+                </button>
 
              </>
          )}
