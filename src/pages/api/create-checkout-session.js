@@ -1,4 +1,5 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+import success from '../../pages/success'
 
 export default async (req, res) => {
    const {items,email} = req.body;
