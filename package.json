@@ -15,7 +15,7 @@
     "@tailwindcss/line-clamp": "^0.2.0",
     "axios": "^0.26.0",
     "firebase": "^9.6.6",
-    "firebase-admin": "latest",
+    "firebase-admin": "^10.0.2",
     "firebase-functions": "latest",
     "micro": "^9.3.4",
     "moment": "^2.29.1",
