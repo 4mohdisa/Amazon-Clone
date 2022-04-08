@@ -23,6 +23,9 @@ Run commands
 3) ```yarn run dev```
 
 
-### If you see the window below then you are set to build AMAZON 2.0!
+### See demo here: https://amazon-2-0-liart.vercel.app/
 
-![Template Screenshot](TemplateScreenshot.jpg?raw=true "Template Screenshot")
+### AMAZON 2.0!
+
+![image](https://user-images.githubusercontent.com/84847782/162528926-935d14b5-b374-4a8d-b641-a33b258666d1.png)
+
