@@ -1,17 +1,17 @@
-Amazon 2.0
+##Amazon 2.0
 Amazon 2.0 is a full-stack web application designed to simulate an e-commerce platform similar to Amazon. This project was created as part of a web development course and built using Node.js, Express, and MongoDB.
 
-Getting Started
+##Getting Started
 To run this application on your local machine, follow the steps outlined below:
 
-Clone this repository to your local machine using the following command:
+##Clone this repository to your local machine using the following command:
 
-bash
+##bash
 Copy code
 git clone https://github.com/4mohdisa/amazon-2.0-.git
 Install the required dependencies using the following command:
 
-Copy code
+##Copy code
 npm install
 Create a .env file in the root directory of the project and add the following environment variables:
 
