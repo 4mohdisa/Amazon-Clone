@@ -1,37 +1,36 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-import success from '../../pages/success'
 
 export default async (req, res) => {
-   const {items,email} = req.body;
+   const {items, email} = req.body;
    
    const transformedItems = items.map((item) => ({
-       price_data:{
-           currency:'usd',
-           product_data:{
+       price_data: {
+           currency: 'aud',
+           product_data: {
                name: item.title,
-               images:[item.image],
+               images: [item.image],
            },
-           unit_amount:item.price * 100,
+           unit_amount: item.price * 100,
        },
        description: item.description,
-       quantity:1,
+       quantity: 1,
    }));
 
    const session = await stripe.checkout.sessions.create({
-       payment_method_types:["card"],
-       shipping_rates:['shr_1KTNk5SH4ImyLd8NlSZNOiT2'],
-       shipping_address_collection:{
-           allowed_countries:["GB","US","CA"],
+       payment_method_types: ["card"],
+       shipping_rates: ['shr_1KTNk5SH4ImyLd8NlSZNOiT2'],
+       shipping_address_collection: {
+           allowed_countries: ["AU", "US", "GB", "CA"],
        },
        line_items: transformedItems,
-       mode: "payment",
+       mode: 'payment',
        success_url: `${process.env.HOST}/success`,
-       cancel_url:`${process.env.HOST}/checkout`,
-       metadata:{
+       cancel_url: `${process.env.HOST}/checkout`,
+       metadata: {
            email,
-           images:JSON.stringify(items.map((item) => item.image)),
-       }, 
-   })
+           images: JSON.stringify(items.map(item => item.image))
+       },
+   });
 
-   res.status(200).json({ id: session.id});
+   res.status(200).json({ id: session.id });
 };
