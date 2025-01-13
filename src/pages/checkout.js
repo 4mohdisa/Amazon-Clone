@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react'
-import Header from "../components/Header";
-import Image from "next/image";
-import { useSelector } from "react-redux";
-import { selectItems, selectTotal } from "../slices/basketSlice";
-import CheckoutProduct from '../components/CheckoutProduct';
-import Currency from "react-currency-formatter";
 import { loadStripe } from "@stripe/stripe-js";
-import axios from 'axios';
-import { auth } from '../firebase';
-import { useRouter } from 'next/router';
+import axios from "axios";
+import { useSelector } from "react-redux";
+import CheckoutProduct from "../components/CheckoutProduct";
+import Header from "../components/Header";
+import { selectItems, selectTotal } from "../slices/basketSlice";
+import Currency from "react-currency-formatter";
+import { useState, useEffect } from "react";
+import { auth } from "../firebase";
+import { useRouter } from "next/router";
 
-const stripePromise = loadStripe(process.env.stripe_public_key)
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 function Checkout() {
-  const router = useRouter();
   const items = useSelector(selectItems);
   const total = useSelector(selectTotal);
+  const router = useRouter();
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -26,7 +26,6 @@ function Checkout() {
       } else {
         router.push('/auth/signin');
       }
-      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -34,58 +33,70 @@ function Checkout() {
 
   const createCheckoutSession = async () => {
     if (!user) {
+      setError("Please sign in to checkout");
       router.push('/auth/signin');
       return;
     }
 
-    try {
-      setLoading(true);
-      const stripe = await stripePromise;
+    if (!items.length) {
+      setError("Your cart is empty");
+      return;
+    }
 
-      // Call backend to create a checkout session...
-      const checkoutSession = await axios.post('/api/create-checkout-session', {
-        items: items,
+    setLoading(true);
+    setError(null);
+
+    try {
+      const stripe = await stripePromise;
+      if (!stripe) {
+        throw new Error("Failed to initialize Stripe");
+      }
+
+      console.log('Creating checkout session with:', {
+        items,
+        email: user.email
+      });
+
+      // Create checkout session
+      const response = await axios.post("/api/create-checkout-session", {
+        items,
         email: user.email,
       });
 
-      // Redirect user/customer to stripe checkout
+      if (!response.data || !response.data.id) {
+        throw new Error('Invalid response from server');
+      }
+
+      console.log('Checkout session created:', response.data.id);
+
+      // Redirect to Stripe checkout
       const result = await stripe.redirectToCheckout({
-        sessionId: checkoutSession.data.id,
+        sessionId: response.data.id,
       });
 
       if (result.error) {
-        alert(result.error.message);
+        throw new Error(result.error.message);
       }
-    } catch (error) {
-      console.error('Error creating checkout session:', error);
-      alert('There was an error processing your checkout. Please try again.');
+    } catch (err) {
+      console.error("Checkout error:", err);
+      setError(
+        err.response?.data?.error?.message ||
+        err.message ||
+        "An error occurred during checkout. Please try again."
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="bg-gray-100 h-screen">
-        <Header />
-        <main className="max-w-screen-2xl mx-auto">
-          <div className="flex items-center justify-center p-10">
-            <div className="text-center">
-              <p className="text-lg">Loading...</p>
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
   return (
     <div className="bg-gray-100">
       <Header />
+
       <main className="lg:flex max-w-screen-2xl mx-auto">
         {/* Left */}
         <div className="flex-grow m-5 shadow-sm">
-          <Image
+          <img
             src="https://links.papareact.com/ikj"
             width={1020}
             height={250}
@@ -100,24 +111,14 @@ function Checkout() {
             </h1>
 
             {items.map((item, i) => (
-              <CheckoutProduct
-                key={i}
-                id={item.id}
-                title={item.title}
-                rating={item.rating}
-                price={item.price}
-                description={item.description}
-                category={item.category}
-                image={item.image}
-                hasPrime={item.hasPrime}
-              />
+              <CheckoutProduct key={i} {...item} />
             ))}
           </div>
         </div>
 
         {/* Right */}
-        {items.length > 0 && (
-          <div className="flex flex-col bg-white p-10 shadow-md">
+        <div className="flex flex-col bg-white p-10 shadow-md">
+          {items.length > 0 && (
             <>
               <h2 className="whitespace-nowrap">
                 Subtotal ({items.length} items):{" "}
@@ -126,20 +127,28 @@ function Checkout() {
                 </span>
               </h2>
 
+              {error && (
+                <div className="text-red-500 text-sm mt-2 mb-2">{error}</div>
+              )}
+
               <button
                 role="link"
                 onClick={createCheckoutSession}
                 disabled={!user || loading}
                 className={`button mt-2 ${
-                  (!user || loading) &&
+                  (loading || !user) &&
                   "from-gray-300 to-gray-500 border-gray-200 text-gray-300 cursor-not-allowed"
                 }`}
               >
-                {loading ? "Processing..." : !user ? "Sign in to checkout" : "Proceed to checkout"}
+                {loading
+                  ? "Processing..."
+                  : !user
+                  ? "Sign in to checkout"
+                  : "Proceed to checkout"}
               </button>
             </>
-          </div>
-        )}
+          )}
+        </div>
       </main>
     </div>
   );
