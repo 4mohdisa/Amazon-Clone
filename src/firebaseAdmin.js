@@ -1,5 +1,4 @@
 import * as admin from 'firebase-admin';
-import { getFirestore } from 'firebase-admin/firestore';
 
 if (!admin.apps.length) {
   try {
@@ -7,13 +6,16 @@ if (!admin.apps.length) {
       credential: admin.credential.cert({
         projectId: process.env.FIREBASE_PROJECT_ID,
         clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
       }),
+      databaseURL: `https://${process.env.FIREBASE_PROJECT_ID}.firebaseio.com`
     });
+    console.log('Firebase Admin initialized successfully');
   } catch (error) {
-    console.error('Firebase admin initialization error:', error);
+    console.error('Firebase admin initialization error:', error.stack);
   }
 }
 
-export const adminDb = getFirestore();
-export { admin };
+const adminDb = admin.firestore();
+
+export { adminDb, admin };

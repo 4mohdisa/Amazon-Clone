@@ -1,20 +1,46 @@
 import { initializeApp, getApp, getApps } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC59X-Zgd_cgdtDwK6_i9bq7dHa5qyaCdk",
-  authDomain: "clone-ddc61.firebaseapp.com",
-  projectId: "clone-ddc61",
-  storageBucket: "clone-ddc61.firebasestorage.app",
-  messagingSenderId: "1019058496986",
-  appId: "1:1019058496986:web:7ef97926c12b8d30680ce3",
-  measurementId: "G-Q02BNRMMQW"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
 // Initialize Firebase
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+let app;
+try {
+  if (!getApps().length) {
+    app = initializeApp(firebaseConfig);
+    console.log('Firebase initialized successfully');
+  } else {
+    app = getApp();
+  }
+} catch (error) {
+  console.error('Firebase initialization error:', error);
+}
+
+// Initialize Firestore
 const db = getFirestore(app);
+
+// Enable offline persistence
+try {
+  enableIndexedDbPersistence(db).catch((err) => {
+    if (err.code === 'failed-precondition') {
+      console.warn('Multiple tabs open, persistence can only be enabled in one tab at a time.');
+    } else if (err.code === 'unimplemented') {
+      console.warn('The current browser does not support persistence.');
+    }
+  });
+} catch (error) {
+  console.warn('Error enabling persistence:', error);
+}
+
+// Initialize Auth
 const auth = getAuth(app);
 
 export { app, db, auth };
