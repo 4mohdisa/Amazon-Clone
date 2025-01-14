@@ -1,17 +1,12 @@
 import Product from "./Product";
 
-function ProductFeed({ products, loading }) {
-    if (loading) {
+function ProductFeed({ products }) {
+    if (!products || products.length === 0) {
         return (
             <div className="grid grid-flow-row-dense md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:-mt-52 mx-auto">
-                {[...Array(8)].map((_, i) => (
-                    <div key={i} className="m-5 p-10 bg-white z-30 animate-pulse">
-                        <div className="w-full h-[200px] bg-gray-200 mb-4"></div>
-                        <div className="h-4 bg-gray-200 w-3/4 mb-4"></div>
-                        <div className="h-4 bg-gray-200 w-1/2 mb-4"></div>
-                        <div className="h-4 bg-gray-200 w-1/4"></div>
-                    </div>
-                ))}
+                <div className="col-span-full text-center py-10">
+                    <p className="text-gray-500">No products available</p>
+                </div>
             </div>
         );
     }
@@ -19,8 +14,8 @@ function ProductFeed({ products, loading }) {
     return (
         <div className="grid grid-flow-row-dense md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:-mt-52 mx-auto">
             {products
-                .slice(0,4)
-                .map(({id, title, price, description, category, image}) => (
+                .slice(0, 4)
+                .map(({ id, title, price, description, category, image }) => (
                     <Product
                         key={id}
                         id={id}
@@ -30,20 +25,18 @@ function ProductFeed({ products, loading }) {
                         category={category}
                         image={image}
                     />
-            ))}
+                ))}
 
-            {products.length > 0 && (
-                <img
-                    src="https://links.papareact.com/dyz"
-                    alt=""
-                    className="md:col-span-full"
-                />
-            )}
+            <img
+                className="md:col-span-full mx-auto"
+                src="https://links.papareact.com/dyz"
+                alt="Amazon Advertising"
+            />
 
             <div className="md:col-span-2">
                 {products
-                    .slice(4,5)
-                    .map(({id, title, price, description, category, image}) => (
+                    .slice(4, 5)
+                    .map(({ id, title, price, description, category, image }) => (
                         <Product
                             key={id}
                             id={id}
@@ -53,12 +46,12 @@ function ProductFeed({ products, loading }) {
                             category={category}
                             image={image}
                         />
-                ))}
+                    ))}
             </div>
 
             {products
                 .slice(5, products.length)
-                .map(({id, title, price, description, category, image}) => (
+                .map(({ id, title, price, description, category, image }) => (
                     <Product
                         key={id}
                         id={id}
@@ -68,7 +61,7 @@ function ProductFeed({ products, loading }) {
                         category={category}
                         image={image}
                     />
-            ))}
+                ))}
         </div>
     );
 }

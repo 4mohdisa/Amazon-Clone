@@ -3,97 +3,82 @@ import Banner from "../components/Banner"
 import Header from "../components/Header";
 import ProductFeed from "../components/ProductFeed";
 import Footer from "../components/Footer";
-import { getSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { auth } from "../firebase";
 import { 
   selectProducts, 
-  selectProductsLoading, 
-  selectLastFetched,
   setProducts,
   setLoading,
   setError
 } from "../slices/productsSlice";
 
-// Cache duration in milliseconds (e.g., 5 minutes)
-const CACHE_DURATION = 5 * 60 * 1000;
-
-export default function Home({ initialProducts, session }) {
+export default function Home({ products: initialProducts }) {
   const dispatch = useDispatch();
-  const products = useSelector(selectProducts);
-  const loading = useSelector(selectProductsLoading);
-  const lastFetched = useSelector(selectLastFetched);
+  const reduxProducts = useSelector(selectProducts);
+  const [loading, setLocalLoading] = useState(true);
+  const [error, setLocalError] = useState(null);
 
+  // Initialize products in Redux store
   useEffect(() => {
-    if (initialProducts && products.length === 0) {
+    if (initialProducts && (!reduxProducts || reduxProducts.length === 0)) {
       dispatch(setProducts(initialProducts));
     }
-  }, [dispatch, initialProducts]);
-
-  useEffect(() => {
-    const shouldFetchProducts = () => {
-      if (!lastFetched) return false;
-      return Date.now() - lastFetched > CACHE_DURATION;
-    };
-
-    const fetchProducts = async () => {
-      if (!shouldFetchProducts()) return;
-
-      dispatch(setLoading());
-      try {
-        const response = await fetch('https://fakestoreapi.com/products');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        dispatch(setProducts(data));
-      } catch (error) {
-        console.error('Error fetching products:', error);
-        dispatch(setError(error.message));
-      }
-    };
-
-    fetchProducts();
-  }, [dispatch, lastFetched]);
+    setLocalLoading(false);
+  }, [dispatch, initialProducts, reduxProducts]);
 
   return (
     <div className="bg-gray-100">
       <Head>
         <title>Amazon 2.0</title>
       </Head>
-      <Header/>
+
+      <Header />
+
       <main className="max-w-screen-2xl mx-auto">
-        <Banner/>
-        <ProductFeed products={products} loading={loading} />
+        <Banner />
+
+        {loading ? (
+          <div className="flex justify-center items-center h-96">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400"></div>
+          </div>
+        ) : error ? (
+          <div className="text-center py-10">
+            <div className="text-red-500 text-lg">{error}</div>
+            <button
+              onClick={() => window.location.reload()}
+              className="button mt-4"
+            >
+              Try Again
+            </button>
+          </div>
+        ) : (
+          <ProductFeed products={reduxProducts || initialProducts} />
+        )}
       </main>
-      <Footer/>
+
+      <Footer />
     </div>
   );
 }
 
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
-
+export async function getServerSideProps() {
   try {
-    const response = await fetch('https://fakestoreapi.com/products');
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const initialProducts = await response.json();
+    const res = await fetch('https://fakestoreapi.com/products');
+    const products = await res.json();
 
     return {
       props: {
-        initialProducts,
-        session
-      }
+        products,
+      },
     };
   } catch (error) {
-    console.error('Error fetching initial products:', error);
+    console.error('Error fetching products:', error);
     return {
       props: {
-        initialProducts: [],
-        session
-      }
+        products: [],
+        error: 'Failed to fetch products'
+      },
     };
   }
 }

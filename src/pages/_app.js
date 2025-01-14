@@ -23,20 +23,17 @@ function MyApp({ Component, pageProps }) {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    console.log('Auth state change listener setup');
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      console.log('Auth state changed:', user ? 'User logged in' : 'No user');
       if (!user && !publicPages.includes(router.pathname)) {
         router.push('/auth/signin')
       }
       setIsLoading(false)
     })
-    return () => unsubscribe()
-  }, [router])
 
-  if (isLoading) {
-    return <Loading />
-  }
+    return () => unsubscribe()
+  }, [router, publicPages])
+
+  if (isLoading) return <Loading />
 
   return (
     <Provider store={store}>
