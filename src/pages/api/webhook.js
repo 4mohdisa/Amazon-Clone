@@ -1,5 +1,10 @@
 import { buffer } from 'micro';
 import * as admin from 'firebase-admin';
+import Stripe from 'stripe';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2023-10-16',
+});
 
 // Secure webhook handling
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -18,26 +23,58 @@ if (!admin.apps.length) {
 }
 
 const fulfillOrder = async (session) => {
+  console.log('Starting order fulfillment for session:', session.id);
+  
   try {
-    console.log('Fulfilling order:', session.id);
+    // Parse the metadata
+    const metadata = session.metadata || {};
+    console.log('Session metadata:', metadata);
     
-    const db = admin.firestore();
+    const items = metadata.items ? JSON.parse(metadata.items) : [];
+    console.log('Parsed items:', items);
     
-    await db.collection('users')
-      .doc(session.metadata.email)
-      .collection('orders')
-      .doc(session.id)
-      .set({
-        amount: session.amount_total / 100,
-        amount_shipping: session.total_details?.amount_shipping / 100 || 0,
-        images: JSON.parse(session.metadata.images),
-        timestamp: admin.firestore.FieldValue.serverTimestamp(),
-        items: JSON.parse(session.metadata.items)
-      });
+    const email = session.customer_details?.email;
+    if (!email) {
+      throw new Error('No email found in session');
+    }
+    
+    console.log('Processing order for email:', email);
 
-    console.log(`SUCCESS: Order ${session.id} has been added to the database`);
+    // Create a reference to the user's orders
+    const orderRef = admin.firestore()
+      .collection('users')
+      .doc(email)
+      .collection('orders')
+      .doc(session.id);
+
+    const orderData = {
+      amount: session.amount_total / 100,
+      amount_shipping: session.total_details?.amount_shipping / 100 || 0,
+      images: items.map(item => item.image),
+      items: items,
+      timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      status: 'processing',
+      paymentStatus: session.payment_status,
+      shippingDetails: session.shipping_details || {},
+      email: email,
+      id: session.id // Adding session ID explicitly
+    };
+
+    console.log('Saving order data:', orderData);
+
+    // Save the order
+    await orderRef.set(orderData, { merge: true });
+
+    console.log('Success: Order', session.id, 'has been saved to the database');
+    return true;
   } catch (error) {
-    console.error('Error fulfilling order:', error);
+    console.error('Error in fulfillOrder:', error);
+    console.error('Session details:', {
+      id: session.id,
+      email: session.customer_details?.email,
+      metadata: session.metadata,
+      timestamp: new Date().toISOString()
+    });
     throw error;
   }
 };
@@ -55,29 +92,36 @@ export default async function handler(req, res) {
   let event;
 
   try {
-    const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
     event = stripe.webhooks.constructEvent(payload, sig, endpointSecret);
-    console.log('Webhook event constructed:', event.type);
+    console.log('Webhook received:', event.type);
   } catch (err) {
-    console.error('Webhook error:', err.message);
+    console.error('Webhook Error:', err.message);
+    console.error('Signature:', sig);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
   // Handle the checkout.session.completed event
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
+    console.log('Processing completed checkout session:', session.id);
 
     try {
       await fulfillOrder(session);
-      return res.status(200).json({ received: true });
+      console.log('Order fulfilled successfully');
+      res.status(200).json({ received: true });
     } catch (error) {
-      console.error('Error processing order:', error);
-      return res.status(500).json({ error: 'Error processing order' });
+      console.error('Error fulfilling order:', error);
+      res.status(500).json({
+        error: 'Error processing order',
+        message: error.message,
+        sessionId: session.id,
+        timestamp: new Date().toISOString()
+      });
     }
+  } else {
+    console.log('Unhandled event type:', event.type);
+    res.json({ received: true });
   }
-
-  // Return a response to acknowledge receipt of the event
-  res.status(200).json({ received: true });
 }
 
 export const config = {
